@@ -88,6 +88,12 @@ return [
             'options'  => []
         ],
 
+        'mongodb_string' => [
+            'driver' => 'mongodb',
+            'dsn' => env('DB_DSN'),
+            'database' => env('DB_DATABASE', 'covid_shopify_kits'),
+        ],
+
         'sqlsrv' => [
             'driver'         => 'sqlsrv',
             'url'            => env('DATABASE_URL'),
