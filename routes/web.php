@@ -14,14 +14,17 @@ use Inertia\Inertia;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::resource('student',\App\Http\Controllers\StudentController::class);
+
+if (env('ENABLE_STUDENT') === 'true') {
+    Route::resource('student', \App\Http\Controllers\StudentController::class);
+}
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
+        'canLogin'       => Route::has('login'),
+        'canRegister'    => Route::has('register'),
         'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
+        'phpVersion'     => PHP_VERSION,
     ]);
 });
 
