@@ -8,6 +8,7 @@
         "hot": "mix watch --hot",
         "prod": "npm run production",
         "production": "mix --production",
+        "docker-bash": "docker-compose exec \"laravel.test\" bash",
         "sail-up": "vendor/bin/sail up",
         "sail-down": "vendor/bin/sail down"
     },
