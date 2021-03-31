@@ -19,3 +19,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::post('/receiving', [\App\Http\Controllers\ReceiverController::class, 'receiving']);
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/orders/list', [\App\Http\Controllers\OrdersController::class, 'getOrders']);
+});
