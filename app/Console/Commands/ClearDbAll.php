@@ -7,7 +7,7 @@ use App\Models\Order;
 use App\Models\Receive;
 use Illuminate\Console\Command;
 
-class ClearDbReceives extends Command
+class ClearDbAll extends Command
 {
     /**
      * The name and signature of the console command.
