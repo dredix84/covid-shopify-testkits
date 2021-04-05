@@ -10,7 +10,21 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="\app\Console\Commands\DevTest.php">
+          <value>
+            <Attribute>
+              <option name="separator" value=";" />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="\app\Events\ReceivedOrder.php">
+          <value>
+            <Attribute>
+              <option name="separator" value=";" />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\app\Helpers\Util.php">
           <value>
             <Attribute>
               <option name="separator" value=";" />
@@ -45,6 +59,13 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="\app\Models\EntryModel.php">
+          <value>
+            <Attribute>
+              <option name="separator" value=";" />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="\app\Models\Receive.php">
           <value>
             <Attribute>
@@ -52,10 +73,45 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="\config\shopify.php">
+          <value>
+            <Attribute>
+              <option name="separator" value=";" />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\config\telescope.php">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\database\migrations\2021_03_27_190212_create_receives_table.php">
+          <value>
+            <Attribute>
+              <option name="separator" value=";" />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\database\seeders\OrderSeeder.php">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="\package.json">
           <value>
             <Attribute>
               <option name="separator" value=":" />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\resources\js\Pages\Orders.vue">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
             </Attribute>
           </value>
         </entry>

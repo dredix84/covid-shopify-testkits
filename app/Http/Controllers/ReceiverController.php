@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 
 class ReceiverController extends Controller
 {
-    public function receiving(Request $request)
+    public function receiving(Request $request): \Illuminate\Http\JsonResponse
     {
         $received = new Receive();
         $received->fillHeaders($request->header());

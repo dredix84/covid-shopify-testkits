@@ -14,6 +14,7 @@ use Jenssegers\Mongodb\Eloquent\Model;
  * @property string email
  * @property string first_name
  * @property string last_name
+ * @property string full_name
  */
 class Customer extends Model
 {
@@ -23,4 +24,11 @@ class Customer extends Model
     protected $fillable = ['*'];
 
     protected $fillableExceptions = ['created_at', 'updated_at'];
+
+    protected $appends = ['full_name'];
+
+    public function getFullNameAttribute()
+    {
+        return sprintf("%s %s", $this->first_name, $this->last_name);
+    }
 }

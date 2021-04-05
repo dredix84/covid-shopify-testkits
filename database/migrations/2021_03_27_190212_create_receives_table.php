@@ -13,10 +13,14 @@ class CreateReceivesTable extends Migration
      */
     public function up()
     {
-        Schema::create('receives', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
-        });
+        try {
+            Schema::create('receives', function (Blueprint $table) {
+                $table->id();
+                $table->timestamps();
+            });
+        } catch (Exception $exception) {
+
+        }
     }
 
     /**

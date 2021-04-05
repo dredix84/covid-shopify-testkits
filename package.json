@@ -9,8 +9,11 @@
         "prod": "npm run production",
         "production": "mix --production",
         "docker-bash": "docker-compose exec \"laravel.test\" bash",
-        "sail-up": "vendor/bin/sail up",
-        "sail-down": "vendor/bin/sail down"
+        "docker-up": "docker-compose up",
+        "docker-down": "docker-compose down",
+        "docker-all-truncate": "docker-compose exec \"laravel.test\" php artisan db:all:truncate",
+        "docker-composer-install": "docker-compose exec \"laravel.test\" composer install -n",
+        "docker-composer-update": "docker-compose exec \"laravel.test\" composer update -n"
     },
     "devDependencies": {
         "@inertiajs/inertia": "^0.8.4",
@@ -30,6 +33,7 @@
         "vue-loader": "^16.1.2"
     },
     "dependencies": {
-        "element-plus": "^1.0.2-beta.35"
+        "element-plus": "^1.0.2-beta.35",
+        "moment": "^2.29.1"
     }
 }

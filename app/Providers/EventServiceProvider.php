@@ -3,7 +3,7 @@
 namespace App\Providers;
 
 use App\Events\ReceivedOrder;
-use App\Listeners\ProcessReceievdOrder;
+use App\Listeners\ProcessReceivedOrder;
 use App\Listeners\ProcessReceivedOrderCustomer;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -23,7 +23,7 @@ class EventServiceProvider extends ServiceProvider
         ],
         ReceivedOrder::class => [
             ProcessReceivedOrderCustomer::class,
-            ProcessReceievdOrder::class
+            ProcessReceivedOrder::class
         ]
     ];
 
