@@ -9,9 +9,16 @@ use Inertia\Inertia;
 
 class OrdersController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return Inertia::render('Orders');
+        return Inertia::render(
+            'Orders',
+            [
+                'init-data' => [
+                    'orders' => $this->getOrders($request)
+                ]
+            ]
+        );
     }
 
     public function getOrders(Request $request)
@@ -21,9 +28,11 @@ class OrdersController extends Controller
 
         return Order::orderBy('created_at', 'desc')
             ->where(function ($q) use ($filters) {
-                foreach ($filters as $key => $value) {
-                    if ($value !== null) {
-                        $q->where($key, $value);
+                if ($filters) {
+                    foreach ($filters as $key => $value) {
+                        if ($value !== null) {
+                            $q->where($key, $value);
+                        }
                     }
                 }
             })

@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\FeedbackController;
+use App\Http\Controllers\OrdersController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -21,5 +24,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::post('/receiving', [\App\Http\Controllers\ReceiverController::class, 'receiving']);
 
 Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/orders', [OrdersController::class, 'getOrders']);
+    Route::get('/customer', [CustomerController::class, 'getCustomers']);
 });
-Route::get('/orders', [\App\Http\Controllers\OrdersController::class, 'getOrders']);
+
+
+Route::post('/feedback', [FeedbackController::class, 'store'])->name('feedback.post');

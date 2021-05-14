@@ -18,7 +18,7 @@
                             <h2>Filters</h2>
                             <el-select
                                 v-model="filters.fulfillment_status"
-                                class="ml-2"
+                                class="mr-2"
                                 clearable
                                 placeholder="Fulfillment Status"
                             >
@@ -30,7 +30,7 @@
                             </el-select>
                             <el-select
                                 v-model="filters.financial_status"
-                                class="ml-2"
+                                class="mr-2"
                                 placeholder="Payment Status"
                                 clearable
                             >
@@ -68,6 +68,11 @@
                                     width="55">
                                 </el-table-column>
                                 <el-table-column
+                                    prop="order_number"
+                                    label="Order"
+                                    width="60">
+                                </el-table-column>
+                                <el-table-column
                                     label="Name"
                                     width="180">
                                     <template #default="scope">
@@ -75,9 +80,11 @@
                                     </template>
                                 </el-table-column>
                                 <el-table-column
-                                    prop="fulfillment_status"
                                     width="100"
                                     label="Fulfillment">
+                                    <template #default="scope">
+                                        {{ scope.row.fulfillment_status ? scope.row.fulfillment_status : 'New' }}
+                                    </template>
                                 </el-table-column>
                                 <el-table-column
                                     prop="financial_status"
@@ -127,6 +134,7 @@ export default {
         AppLayout,
         Welcome,
     },
+    props: ['initData'],
     data() {
         return {
             busy: {
@@ -147,7 +155,7 @@ export default {
             },
             options: {
                 fulfillment_status: [
-                    {label: 'Any', value: null},
+                    {label: 'Any Fulfillment Status', value: null},
                     {label: 'Fulfilled', value: 'fulfilled'},
                     {label: 'Unfulfilled', value: 'unfulfilled'},
                     {label: 'Pending', value: 'pending'},
@@ -156,7 +164,7 @@ export default {
                     {label: 'On Hold', value: 'on_hold'}
                 ],
                 payment_status: [
-                    {label: 'Any', value: null},
+                    {label: 'Any Payment Status', value: null},
                     {label: 'Voided', value: 'voided'},
                     {label: 'Authorized', value: 'authorized'},
                     {label: 'Paid', value: 'paid'},
@@ -216,7 +224,8 @@ export default {
         }
     },
     mounted() {
-        this.getOrders();
+        this.tableData = this.initData.orders;
+        // this.getOrders();
     }
 }
 </script>

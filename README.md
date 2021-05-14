@@ -7,6 +7,21 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
+## Setup
+ - Clone project to you local and then go into directory
+ - Setup laradock
+    - Add laradock as a git submodule `git submodule add https://github.com/Laradock/laradock.git`
+    - Go into laradock folder `cd laradock`
+    - Create an environment file and edit the settings as needed`cp .env.example .env`
+        - Set `COMPOSE_FILE=docker-compose.custom.yml`
+    - Create docker-compose file `cp docker-compose.yml docker-compose.custom.yml`
+        - Remove all services except 
+            1. workspace
+            1. php-fpm
+            1. nginx
+            1. docker-in-docker
+    - Build container with the command `docker-compose build`
+
 ## About Laravel
 
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:

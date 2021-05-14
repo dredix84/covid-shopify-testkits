@@ -8,12 +8,12 @@
         "hot": "mix watch --hot",
         "prod": "npm run production",
         "production": "mix --production",
-        "docker-bash": "docker-compose exec \"laravel.test\" bash",
-        "docker-up": "docker-compose up",
-        "docker-down": "docker-compose down",
-        "docker-all-truncate": "docker-compose exec \"laravel.test\" php artisan db:all:truncate",
-        "docker-composer-install": "docker-compose exec \"laravel.test\" composer install -n",
-        "docker-composer-update": "docker-compose exec \"laravel.test\" composer update -n"
+        "docker-bash": "cd laradock && docker-compose exec workspace bash",
+        "docker-up": "cd laradock && docker-compose down && docker-compose up",
+        "docker-down": "cd laradock && docker-compose down",
+        "docker-all-truncate": "cd laradock && docker-compose exec workspace php artisan db:all:truncate",
+        "docker-composer-install": "cd laradock && docker-compose exec workspace composer install -n",
+        "docker-composer-update": "cd laradock && docker-compose exec workspace composer update -n"
     },
     "devDependencies": {
         "@inertiajs/inertia": "^0.8.4",
@@ -23,7 +23,7 @@
         "@tailwindcss/typography": "^0.3.0",
         "@vue/compiler-sfc": "^3.0.5",
         "autoprefixer": "^10.0.2",
-        "axios": "^0.21",
+        "axios": "^0.21.1",
         "laravel-mix": "^6.0.13",
         "lodash": "^4.17.19",
         "postcss": "^8.1.14",
@@ -34,6 +34,7 @@
     },
     "dependencies": {
         "element-plus": "^1.0.2-beta.35",
-        "moment": "^2.29.1"
+        "moment": "^2.29.1",
+        "vform": "^2.0.4"
     }
 }

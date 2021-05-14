@@ -1,5 +1,9 @@
 <?php
 
+use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\FeedbackController;
+use App\Http\Controllers\OrdersController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -13,10 +17,10 @@ Route::get('/', function () {
     ]);
 });
 
-Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->name('dashboard');
+Route::middleware(['auth:sanctum', 'verified'])->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/orders', [OrdersController::class, 'index'])->name('orders');
+    Route::get('/customers', [CustomerController::class, 'index'])->name('customers');
 
-Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/orders', [\App\Http\Controllers\OrdersController::class, 'index'])->name('orders');
+    Route::get('/feedback/{customerId}', [FeedbackController::class, 'showForm'])->name('feedback.form');
 });
