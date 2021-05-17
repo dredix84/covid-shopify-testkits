@@ -12,10 +12,6 @@ class ReceiverController extends Controller
 {
     public function receiving(Request $request): \Illuminate\Http\JsonResponse
     {
-        if(I){
-
-        }
-
         $received = new Receive();
         $received->fillHeaders($request->header());
         $received->payload = $request->all();
