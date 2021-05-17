@@ -29,7 +29,7 @@ class Receive extends Model
         foreach ($headers as $key => $value) {
             $fixedHeader[$key] = is_array($value) && count($value) === 1 ? $value[0] : $value;
             if ($topicKey === $key) {
-                $this->topic = $value;
+                $this->topic = is_array($value) && count($value) === 1 ? $value[0] : $value;
             }
         }
         $this->headers = $fixedHeader;

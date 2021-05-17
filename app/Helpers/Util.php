@@ -24,4 +24,8 @@ class Util
 
         return $outData;
     }
+
+    public static function isAllowedHeader(){
+        return collect(config('shopify.allow_headers'))->flatten()->toArray();
+    }
 }
