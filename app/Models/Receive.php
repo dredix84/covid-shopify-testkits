@@ -11,6 +11,7 @@ use Jenssegers\Mongodb\Eloquent\Model;
  * @package App\Models
  * @property array headers
  * @property array payload
+ * @property string topic
  */
 class Receive extends Model
 {
@@ -22,9 +23,14 @@ class Receive extends Model
 
     public function fillHeaders($headers)
     {
+        $topicKey = config('shopify.headers.topic');
+
         $fixedHeader = [];
         foreach ($headers as $key => $value) {
             $fixedHeader[$key] = is_array($value) && count($value) === 1 ? $value[0] : $value;
+            if ($topicKey === $key) {
+                $this->topic = $value;
+            }
         }
         $this->headers = $fixedHeader;
         return $this;
