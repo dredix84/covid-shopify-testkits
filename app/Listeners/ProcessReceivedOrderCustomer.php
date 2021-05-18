@@ -3,6 +3,7 @@
 namespace App\Listeners;
 
 use App\Events\ReceivedOrder;
+use App\Helpers\ExceptionHelper;
 use App\Models\Customer;
 use App\Models\Order;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -29,15 +30,25 @@ class ProcessReceivedOrderCustomer
      */
     public function handle(ReceivedOrder $event)
     {
-        if (Order::isAllowedHeader($event->received->topic)) {
-            $receivedCustomer = $event->received->payload['customer'];
+        try {
+            if (Order::isAllowedHeader($event->received->topic)) {
+                $receivedCustomer = $event->received->payload['customer'];
 
-            /** @var Customer $customer */
-            $customer = Customer::firstOrCreate([
-                'email' => $receivedCustomer['email']
-            ]);
-            $customer->fillFromShopify($receivedCustomer);
-            $customer->save();
+                /** @var Customer $customer */
+                $customer = Customer::firstOrCreate([
+                    'email' => $receivedCustomer['email']
+                ]);
+                $customer->fillFromShopify($receivedCustomer);
+                $customer->save();
+            }
+        } catch (\Exception $e) {
+            ExceptionHelper::logError(
+                $e,
+                "ProcessReceivedOrderCustomer: There was an error while attempting to process the data",
+                [
+                    'payload' => $event->received->payload
+                ]
+            );
         }
     }
 }
