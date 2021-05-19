@@ -22,5 +22,6 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('/orders', [OrdersController::class, 'index'])->name('orders');
     Route::get('/customers', [CustomerController::class, 'index'])->name('customers');
 
-    Route::get('/feedback/{customerId}', [FeedbackController::class, 'showForm'])->name('feedback.form');
 });
+
+Route::get('/feedback/{customerId}', [FeedbackController::class, 'showForm'])->name('feedback.form');
