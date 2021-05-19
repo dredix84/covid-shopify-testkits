@@ -2,7 +2,7 @@
     <app-layout>
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight" @click="getOrders">
-                <div v-if="customer.default_address.company">customer.default_address.company</div>
+                <div v-if="customer.default_address.company">{{ customer.default_address.company }}</div>
                 <div v-else> {{ customer.full_name }}</div>
             </h2>
         </template>
