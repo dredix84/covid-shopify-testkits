@@ -111,7 +111,7 @@
                                     label="Items">
                                     <template #default="scope">
                                         <div v-for="item in scope.row.line_items">
-                                            {{ item.name }} ({{ item.quantity }})
+                                            {{ item.name }} ({{ item.quantity  * itemMultiplier}})
                                         </div>
                                     </template>
                                 </el-table-column>
@@ -134,7 +134,12 @@ export default {
         AppLayout,
         Welcome,
     },
-    props: ['initData'],
+    props: {
+        initData: {},
+        itemMultiplier: {
+            default: 25
+        }
+    },
     data() {
         return {
             busy: {

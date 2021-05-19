@@ -39,6 +39,14 @@ class ProcessReceivedOrderCustomer
                     'email' => $receivedCustomer['email']
                 ]);
                 $customer->fillFromShopify($receivedCustomer);
+
+                if ($event->received->topic === Order::SHOPIFY_HEADER_TOPIC_CREATE) {
+                    /** @var Order $order */
+                    $order = new Order();
+                    $order->fillFromShopify($event->received->payload);
+                    $customer->last_order = $order->toArray();
+                }
+
                 $customer->save();
             }
         } catch (\Exception $e) {

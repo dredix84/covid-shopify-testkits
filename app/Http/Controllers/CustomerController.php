@@ -22,11 +22,18 @@ class CustomerController extends Controller
 
     public function getCustomers(Request $request)
     {
-        $per_page = $request->per_page ?? 25;
-        $filters  = $request->filters ? json_decode($request->filters) : null;
+        $per_page   = $request->per_page ?? 25;
+        $searchTerm = $request->term ?? null;
+        $filters    = $request->filters ? json_decode($request->filters) : null;
 
         return Customer::orderBy('created_at', 'desc')
-            ->with(['LastFeedback', 'LastOrder'])
+            ->where(function ($q) use ($searchTerm) {
+                if (!blank($searchTerm)) {
+                    $q->where('first_name', 'like', "%$searchTerm%");
+                    $q->orWhere('last_name', 'like', "%$searchTerm%");
+                    $q->orWhere('email', 'like', "%$searchTerm%");
+                }
+            })
             ->where(function ($q) use ($filters) {
                 if ($filters) {
                     foreach ($filters as $key => $value) {

@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Events\FeedbackSubmitted;
 use App\Events\ReceivedOrder;
+use App\Listeners\CalculateCustomerdAdministeredTotal;
 use App\Listeners\ProcessReceivedOrder;
 use App\Listeners\ProcessReceivedOrderCustomer;
 use Illuminate\Auth\Events\Registered;
@@ -18,12 +20,15 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        Registered::class => [
+        Registered::class        => [
             SendEmailVerificationNotification::class,
         ],
-        ReceivedOrder::class => [
+        ReceivedOrder::class     => [
             ProcessReceivedOrderCustomer::class,
             ProcessReceivedOrder::class
+        ],
+        FeedbackSubmitted::class => [
+            CalculateCustomerdAdministeredTotal::class
         ]
     ];
 

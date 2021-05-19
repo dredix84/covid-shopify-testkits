@@ -17,6 +17,9 @@ mix.js('resources/js/app.js', 'public/js').vue()
         require('tailwindcss'),
         require('autoprefixer'),
     ])
+    .autoload({
+        moment: ['moment']
+    })
     .webpackConfig(require('./webpack.config'));
 
 if (mix.inProduction()) {

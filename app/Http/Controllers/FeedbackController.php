@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\FeedbackSubmitted;
 use App\Models\Customer;
 use App\Models\Feedback;
+use Cassandra\Custom;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -27,7 +29,12 @@ class FeedbackController extends Controller
             'employee_participating' => 'numeric'
         ]);
 
-        $feedback = Feedback::create($request->all());
+        $customer                = Customer::find($request->customer_id);
+        $feedback                = Feedback::create($request->all());
+        $customer->last_feedback = $feedback->toArray();
+        $customer->save();
+
+        FeedbackSubmitted::dispatch($feedback);
 
         return $feedback;
     }
