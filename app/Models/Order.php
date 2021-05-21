@@ -35,6 +35,26 @@ class Order extends Model
         return false;
     }
 
+    public static function getShippingTitles()
+    {
+        $outData = [];
+        try {
+            $values = self::distinct('shipping_lines.title')
+                ->get();
+            if ($values) {
+                foreach ($values as $value) {
+                    $outData[] = [
+                        'value' => $value->toArray()[0],
+                        'label' => $value->toArray()[0]
+                    ];
+                }
+            }
+        } catch (\Exception $e) {
+
+        }
+        return $outData;
+    }
+
     public function customer()
     {
         return $this->belongsTo(Customer::class, 'email', 'email');

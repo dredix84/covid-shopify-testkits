@@ -102,16 +102,21 @@
                                     label="Address"
                                     width="180">
                                     <template #default="scope">
-                                        {{ scope.row.shipping_address.city }},
-                                        {{ scope.row.shipping_address.province_code }},
-                                        {{ scope.row.shipping_address.country_code }}
+                                        <div v-if="scope.row.shipping_address">
+                                            {{ scope.row.shipping_address.city }},
+                                            {{ scope.row.shipping_address.province_code }},
+                                            {{ scope.row.shipping_address.country_code }}
+                                        </div>
+                                        <div v-else>
+                                            <span class="bold">Pickup: </span>{{ scope.row.shipping_lines[0].title }}
+                                        </div>
                                     </template>
                                 </el-table-column>
                                 <el-table-column
                                     label="Items">
                                     <template #default="scope">
                                         <div v-for="item in scope.row.line_items">
-                                            {{ item.name }} ({{ item.quantity  * itemMultiplier}})
+                                            {{ item.name }} ({{ item.quantity * itemMultiplier }})
                                         </div>
                                     </template>
                                 </el-table-column>

@@ -60,6 +60,7 @@ class Customer extends Model
             if (!blank($this->email)) {
                 $order = Order::select('line_items.quantity')
                     ->where('email', $this->email)
+                    ->where('fulfillment_status', 'fulfilled')
                     ->get();
                 if ($order) {
                     return $order->pluck('line_items.*.quantity')->flatten()->sum();

@@ -16,13 +16,28 @@
 
                         <form @submit.prevent="getCustomers">
                             <div class="grid grid-cols-10 gap-4">
-                                <div class="col-span-9">
+                                <div class="col-span-5">
                                     <el-input
-                                        v-model="searchTerm"
+                                        v-model="filters.searchTerm"
                                         placeholder="Search customer name or email"
                                         clearable
                                         @clear="getCustomers"
                                     />
+                                </div>
+                                <div class="col-span-4">
+                                    <el-select
+                                        v-model="filters.shippingTitle"
+                                        placeholder="Pickup/Shipping"
+                                        clearable
+                                        @clear="getCustomers"
+                                    >
+                                        <el-option
+                                            v-for="item in shippingTitles"
+                                            :key="item.value"
+                                            :label="item.label"
+                                            :value="item.value">
+                                        </el-option>
+                                    </el-select>
                                 </div>
                                 <div>
                                     <el-button
@@ -62,10 +77,10 @@
                                 element-loading-spinner="el-icon-loading"
                                 element-loading-background="rgba(0, 0, 0, 0.8)"
                             >
-<!--                                <el-table-column-->
-<!--                                    type="selection"-->
-<!--                                    width="55">-->
-<!--                                </el-table-column>-->
+                                <!--                                <el-table-column-->
+                                <!--                                    type="selection"-->
+                                <!--                                    width="55">-->
+                                <!--                                </el-table-column>-->
                                 <el-table-column
                                     label="Name"
                                     width="150"
@@ -221,7 +236,8 @@ export default {
         AppLayout
     },
     props: [
-        'initData'
+        'initData',
+        'shippingTitles'
     ],
     data() {
         return {
@@ -229,7 +245,10 @@ export default {
                 show: false,
                 data: null
             },
-            searchTerm: '',
+            filters: {
+                shippingTitle: '',
+                searchTerm: '',
+            },
             busy: {
                 customers: false
             },
@@ -242,13 +261,40 @@ export default {
                 total: 0,
                 data: []
             },
-            filters: {}
+            options: [{
+                value: 'Option1',
+                label: 'Option1'
+            }, {
+                value: 'Option2',
+                label: 'Option2'
+            }, {
+                value: 'Option3',
+                label: 'Option3'
+            }, {
+                value: 'Option4',
+                label: 'Option4'
+            }, {
+                value: 'Option5',
+                label: 'Option5'
+            }],
+        }
+    },
+    computed: {
+        shippingTitleObject() {
+            if (this.shippingTitles) {
+                return this.shippingTitles.map(function (item) {
+                    return {
+                        value: item,
+                        label: item
+                    }
+                });
+            }
+            return [];
         }
     },
     methods: {
         handleCustomerMoreCommandClick(command) {
             let commmandData = command.split(',');
-            console.log({command, commmandData});
 
             switch (commmandData[1]) {
                 case "newFeedback":
@@ -275,7 +321,6 @@ export default {
             let params = {
                 per_page: this.tableData.per_page,
                 page: this.tableData.current_page,
-                term: this.searchTerm,
                 filters: this.filters
             };
 
@@ -303,11 +348,9 @@ export default {
             console.log({val});
         },
         handleSizeChange(val) {
-            console.log(`${val} items per page`);
             this.getCustomers();
         },
         handleCurrentChange(val) {
-            console.log(`current page: ${val}`);
             this.getCustomers();
         },
         getLastOrder(last_order) {
@@ -315,13 +358,12 @@ export default {
         },
         getLastFeedback(last_feedback) {
             if (last_feedback) {
-                console.log({last_feedback});
             }
             return last_feedback ? this.formatDate(last_feedback.created_at) : '--'
         },
         calculatePercentageAdministered(record) {
             let outValue = record.total_administered / (record.item_count * 25) * 100;
-            return !isNaN(outValue) ? Math.floor(outValue) : 0
+            return outValue > 0 && outValue <= 100 ? Math.floor(outValue) : 0
         },
         calculateAllowFulfilment(record) {
             if (!!record.last_order) {

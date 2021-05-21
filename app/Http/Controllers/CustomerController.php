@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Customer;
+use App\Models\Order;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -13,18 +14,20 @@ class CustomerController extends Controller
         return Inertia::render(
             'Customers',
             [
-                'init-data' => [
-                    'customers' => $this->getCustomers($request)
-                ]
+                'init-data'       => [
+                    'customers' => $this->getCustomers($request),
+                ],
+                'shipping-titles' => Order::getShippingTitles()
             ]
         );
     }
 
     public function getCustomers(Request $request)
     {
-        $per_page   = $request->per_page ?? 25;
-        $searchTerm = $request->term ?? null;
-        $filters    = $request->filters ? json_decode($request->filters) : null;
+        $per_page      = $request->per_page ?? 25;
+        $filters       = $request->filters ? json_decode($request->filters) : null;
+        $searchTerm    = $filters->searchTerm ?? null;
+        $shippingTitle = $filters->shippingTitle ?? null;
 
         return Customer::orderBy('created_at', 'desc')
             ->where(function ($q) use ($searchTerm) {
@@ -34,16 +37,21 @@ class CustomerController extends Controller
                     $q->orWhere('email', 'like', "%$searchTerm%");
                 }
             })
-            ->where(function ($q) use ($filters) {
-                if ($filters) {
-                    foreach ($filters as $key => $value) {
-                        if ($value !== null) {
-                            $q->where($key, $value);
-                        }
-                    }
+            ->where(function ($q) use ($shippingTitle) {
+                if (!blank($shippingTitle)) {
+                    $q->where('last_order.shipping_lines.title', $shippingTitle);
                 }
-
             })
+//            ->where(function ($q) use ($filters) {
+//                if ($filters) {
+//                    foreach ($filters as $key => $value) {
+//                        if ($value !== null) {
+//                            $q->where($key, $value);
+//                        }
+//                    }
+//                }
+//
+//            })
             ->paginate((int) $per_page);
     }
 }
