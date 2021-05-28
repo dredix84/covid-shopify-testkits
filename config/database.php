@@ -91,7 +91,7 @@ return [
         'mongodb_string' => [
             'driver' => 'mongodb',
             'dsn' => env('DB_DSN'),
-            'database' => env('MONGO_DB_DATABASE', 'covid_shopify_kits'),
+            'database' => env('MONGO_DB_DATABASE'),
         ],
 
         'sqlsrv' => [
