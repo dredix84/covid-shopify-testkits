@@ -3,6 +3,8 @@
 namespace App\Console\Commands;
 
 use App\Events\ReceivedOrder;
+use App\Models\Customer;
+use App\Models\Order;
 use App\Models\Receive;
 use Illuminate\Console\Command;
 use GuzzleHttp\Client;
@@ -23,7 +25,7 @@ class OrdersSync extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Command used to sync all orders from the Shopify shop';
 
     /**
      * Create a new command instance.
@@ -46,7 +48,6 @@ class OrdersSync extends Command
 
         $client = new Client([
             'base_uri' => config('shopify.api.base_url'),
-//            'timeout'  => 2.0,
             'headers'  => [
                 'X-Shopify-Access-Token' => config('shopify.api.token')
             ]
@@ -90,11 +91,30 @@ class OrdersSync extends Command
                 $received->topic   = "orders/updated";
                 ReceivedOrder::dispatch($received);
             }
-            $this->comment('Waiting 1 secs before next request.');
-            sleep(1);
-        }
-        $this->comment('Operation Complete');
 
+            if (!blank($apiUrl)) {
+                $this->comment('Waiting 1 secs before next request.');
+                sleep(1);
+            }
+        }
+
+        $this->info('Now updating customer data with last order');
+        $customers = Customer::all();
+        $bar       = $this->output->createProgressBar(count($customers));
+        $bar->start();
+        foreach ($customers as $customer) {
+            /** @var Customer $customer */
+            $lastOrder = Order::where('email', $customer->email)
+                ->orderBy('order_number', 'desc')
+                ->first();
+            if ($lastOrder) {
+                $customer->last_order = $lastOrder->toArray();
+                $customer->save();
+            }
+            $bar->advance();
+        }
+        $bar->finish();
+        $this->comment("\nOperation Complete");
         return 0;
     }
 }

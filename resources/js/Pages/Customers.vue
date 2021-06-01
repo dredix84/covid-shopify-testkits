@@ -99,7 +99,7 @@
 
                                 <el-table-column
                                     prop="default_address.company"
-                                    width="100"
+                                    width="120"
                                     label="Company"/>
 
                                 <el-table-column
