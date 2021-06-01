@@ -26,7 +26,7 @@ class OrdersController extends Controller
         $per_page = $request->per_page ?? 25;
         $filters  = $request->filters ? json_decode($request->filters) : null;
 
-        return Order::orderBy('created_at', 'desc')
+        return Order::orderBy('order_number', 'desc')
             ->where(function ($q) use ($filters) {
                 if ($filters) {
                     foreach ($filters as $key => $value) {

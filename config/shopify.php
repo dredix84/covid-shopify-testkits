@@ -4,6 +4,10 @@ use App\Helpers\Util;
 use App\Models\Order;
 
 return [
+    'api' => [
+        'base_url' => env('SHOPIFY_API_BASE_URL'),
+        'token' => env('SHOPIFY_API_TOKEN')
+    ],
     'headers'       => [
         'topic' => 'x-shopify-topic'
     ],
