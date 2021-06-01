@@ -93,9 +93,11 @@
                                 </el-table-column>
                                 <el-table-column
                                     label="Date"
-                                    width="180">
+                                    width="130">
                                     <template #default="scope">
-                                        {{ formatDateTime(scope.row.created_at) }}
+                                        <span :title="formatDateTime(scope.row.created_at)">
+                                            {{ formatDate(scope.row.created_at) }}
+                                        </span>
                                     </template>
                                 </el-table-column>
                                 <el-table-column
@@ -103,12 +105,16 @@
                                     width="180">
                                     <template #default="scope">
                                         <div v-if="scope.row.shipping_address">
+                                            {{ scope.row.shipping_address.company }}<br>
                                             {{ scope.row.shipping_address.city }},
                                             {{ scope.row.shipping_address.province_code }},
                                             {{ scope.row.shipping_address.country_code }}
                                         </div>
-                                        <div v-else>
+                                        <div v-else-if="scope.row.shipping_lines.length">
                                             <span class="bold">Pickup: </span>{{ scope.row.shipping_lines[0].title }}
+                                        </div>
+                                        <div v-else>
+                                            No address
                                         </div>
                                     </template>
                                 </el-table-column>
@@ -228,6 +234,9 @@ export default {
         handleCurrentChange(val) {
             console.log(`current page: ${val}`);
             this.getOrders();
+        },
+        formatDate(dateString) {
+            return moment(dateString).format("ll");
         },
         formatDateTime(dateString) {
             return moment(dateString).format("lll");

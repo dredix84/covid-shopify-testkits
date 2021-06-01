@@ -35,7 +35,7 @@ class ProcessReceivedOrderCustomer
                 $receivedCustomer = $event->received->payload['customer'];
 
                 /** @var Customer $customer */
-                $customer = Customer::firstOrCreate([
+                $customer = Customer::firstOrNew([
                     'email' => $receivedCustomer['email']
                 ]);
                 $customer->fillFromShopify($receivedCustomer);

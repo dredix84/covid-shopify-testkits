@@ -10,6 +10,7 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
 class ReceivedOrder
 {
@@ -26,6 +27,7 @@ class ReceivedOrder
     public function __construct($received)
     {
         $this->received = $received;
+        Log::debug('ReceivedOrder event dispatched');
     }
 
     /**

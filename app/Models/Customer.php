@@ -28,7 +28,7 @@ class Customer extends Model
     use HasFactory;
     use ShopifyFill;
 
-    protected $fillable = ['*'];
+    protected $fillable = ['*', 'email'];
 
     protected $fillableExceptions = ['created_at', 'updated_at'];
 
