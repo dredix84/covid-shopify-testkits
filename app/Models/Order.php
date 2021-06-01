@@ -15,11 +15,17 @@ class Order extends Model
     const SHOPIFY_HEADER_TOPIC_CREATE  = 'orders/create';
     const SHOPIFY_HEADER_TOPIC_UPDATED = 'orders/updated';
 
-    protected $fillable = ['*'];
+    protected $fillable = ['*', 'created_at', 'updated_at'];
 
     protected $fillableExceptions = ['created_at', 'updated_at', 'customer'];
 
     protected $with = ['customer'];
+
+    protected $casts = [
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+        'processed_at' => 'datetime',
+    ];
 
     /**
      * Used to determine if an order should be created based on the header

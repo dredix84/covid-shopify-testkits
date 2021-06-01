@@ -77,10 +77,6 @@
                                 element-loading-spinner="el-icon-loading"
                                 element-loading-background="rgba(0, 0, 0, 0.8)"
                             >
-                                <!--                                <el-table-column-->
-                                <!--                                    type="selection"-->
-                                <!--                                    width="55">-->
-                                <!--                                </el-table-column>-->
                                 <el-table-column
                                     label="Name"
                                     width="150"
@@ -202,7 +198,7 @@
         <el-drawer
             :title="drawer.show"
             v-model="drawer.show">
-            <div class="m-1" v-if="drawer.show === 'Customer'">
+            <div class="drawer-info m-1" v-if="drawer.show === 'Customer'">
                 <div class="grid grid-cols-3 gap-4">
                     <div>Full Name:</div>
                     <div class="col-span-2">{{ drawer.data.full_name }}</div>
@@ -218,6 +214,24 @@
 
                     <div>City:</div>
                     <div class="col-span-2">{{ drawer.data.default_address.city }}</div>
+
+                    <div>Last Order #:</div>
+                    <div class="col-span-2" v-if="drawer.data.last_order">
+                        {{ drawer.data.last_order.order_number }}
+                    </div>
+
+                    <div>Last Tags:</div>
+                    <div class="col-span-2" v-if="drawer.data.last_order && drawer.data.last_order.tags">
+                        <el-tag
+                            v-for="item in drawer.data.last_order.tags.split(',')"
+                            :key="'tag_'+item"
+                            size="mini"
+                            effect="dark"
+                            class="mr-1"
+                        >
+                            {{ item }}
+                        </el-tag>
+                    </div>
                 </div>
             </div>
         </el-drawer>
@@ -414,5 +428,9 @@ export default {
     background-color: green;
     padding: 2px 5px;
     border-radius: 5px;
+}
+
+.drawer-info {
+    font-size: 12pt;
 }
 </style>

@@ -29,7 +29,7 @@ class CustomerController extends Controller
         $searchTerm    = $filters->searchTerm ?? null;
         $shippingTitle = $filters->shippingTitle ?? null;
 
-        return Customer::orderBy('created_at', 'desc')
+        return Customer::orderBy('last_order.created_at', 'desc')
             ->where(function ($q) use ($searchTerm) {
                 if (!blank($searchTerm)) {
                     $q->where('first_name', 'like', "%$searchTerm%");

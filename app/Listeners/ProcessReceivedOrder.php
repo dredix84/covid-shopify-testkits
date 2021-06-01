@@ -47,6 +47,7 @@ class ProcessReceivedOrder
             }
 
             if ($doSave) {
+                $order->created_at = $receivedOrder['created_at'];
                 $order->fillFromShopify($receivedOrder);
                 $order->save();
                 Log::debug('Order created/updated from received record', ['received_id' => $event->received->id]);
