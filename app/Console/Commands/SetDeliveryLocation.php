@@ -15,7 +15,7 @@ class SetDeliveryLocation extends Command
      *
      * @var string
      */
-    protected $signature = 'order:set-pickup-location';
+    protected $signature = 'orders:set-pickup-location';
 
     /**
      * The console command description.
