@@ -37,6 +37,23 @@
                                 <el-option v-for="item in options.payment_status" :value="item.value"
                                            :label="item.label"/>
                             </el-select>
+
+                            <el-select
+                                v-model="filters.pickup_location"
+                                class="mr-2"
+                                placeholder="Pickup Location"
+                                clearable
+                            >
+                                <el-option
+                                    :value="null"
+                                    label="Any Pickup Location"
+                                />
+                                <el-option
+                                    v-for="item in initData.options.pickup_locations"
+                                    :value="item.name"
+                                    :label="item.name"
+                                />
+                            </el-select>
                             <el-button type="primary" @click="getOrders">Search</el-button>
                         </div>
 
@@ -71,6 +88,11 @@
                                     prop="order_number"
                                     label="Order"
                                     width="60">
+                                    <template #default="scope">
+                                        <el-button type="text" @click="handleShowOrderDrawer(scope.row)">
+                                            {{ scope.row.order_number }}
+                                        </el-button>
+                                    </template>
                                 </el-table-column>
                                 <el-table-column
                                     label="Name"
@@ -101,28 +123,35 @@
                                     </template>
                                 </el-table-column>
                                 <el-table-column
-                                    label="Address"
+                                    label="Pickup/Address"
                                     width="180">
                                     <template #default="scope">
-                                        <div v-if="scope.row.shipping_address">
-                                            {{ scope.row.shipping_address.company }}<br>
-                                            {{ scope.row.shipping_address.city }},
-                                            {{ scope.row.shipping_address.province_code }},
-                                            {{ scope.row.shipping_address.country_code }}
+                                        {{ scope.row.pickup_location }}
+                                        <div v-if="scope.row.pickup_location === 'Other'">
+                                            <div v-if="scope.row.shipping_address">
+                                                {{ scope.row.shipping_address.company }}<br>
+                                                {{ scope.row.shipping_address.city }},
+                                                {{ scope.row.shipping_address.province_code }},
+                                                {{ scope.row.shipping_address.country_code }}
+                                            </div>
+                                            <div v-else-if="scope.row.shipping_lines.length">
+                                                <span class="bold">Pickup: </span>{{
+                                                    scope.row.shipping_lines[0].title
+                                                }}
+                                            </div>
+                                            <div v-else>
+                                                No address
+                                            </div>
                                         </div>
-                                        <div v-else-if="scope.row.shipping_lines.length">
-                                            <span class="bold">Pickup: </span>{{ scope.row.shipping_lines[0].title }}
-                                        </div>
-                                        <div v-else>
-                                            No address
-                                        </div>
+
                                     </template>
                                 </el-table-column>
                                 <el-table-column
                                     label="Items">
                                     <template #default="scope">
                                         <div v-for="item in scope.row.line_items">
-                                            {{ item.name }} ({{ item.quantity * itemMultiplier }})
+                                            <span class="bold"> ({{ item.quantity * itemMultiplier }})</span>
+                                            {{ item.name }}
                                         </div>
                                     </template>
                                 </el-table-column>
@@ -132,6 +161,81 @@
                 </div>
             </div>
         </div>
+
+        <el-drawer
+            title="Order Details"
+            v-model="drawer.order">
+            <div class="p-3 drawer-order" style="font-size: 12px" v-if="drawer.order">
+                <el-card class="box-card mb-3">
+                    <template #header>
+                        <div class="card-header">
+                            <span>Customer Details</span>
+                        </div>
+                    </template>
+                    <div class="text item">
+                        Name: {{ drawer.order.customer.full_name }}
+                    </div>
+                    <div class="text item">
+                        Order Count: {{ drawer.order.customer.orders_count }}
+                    </div>
+                    <div class="text item">
+                        Email Address: {{ drawer.order.customer.email }}
+                    </div>
+                    <div class="text item">
+                        Phone: {{ drawer.order.customer.phone }}
+                    </div>
+                </el-card>
+
+                <el-card class="box-card mb-3">
+                    <template #header>
+                        <div class="card-header">
+                            <span>Order Details</span>
+                        </div>
+                    </template>
+                    <div class="text item">
+                        <label>Fulfillment Status:</label>
+                        {{ drawer.order.fulfillment_status ? drawer.order.fulfillment_status : 'New' }}
+                    </div>
+                    <div class="text item">
+                        <label>Order Date:</label> {{ formatDateTime(drawer.order.created_at) }}
+                    </div>
+                    <hr/>
+                    <div class="text item" v-for="item in drawer.order.line_items">
+                        <span class="bold">({{ item.quantity * itemMultiplier }})</span> {{ item.quantity }} -
+                        {{ item.name }}
+                    </div>
+                </el-card>
+
+                <el-card class="box-card">
+                    <template #header>
+                        <div class="card-header">
+                            <span>Pickup/Delivery Details</span>
+                        </div>
+                    </template>
+                    <div class="text item">
+                        {{ drawer.order.pickup_location }}
+                        <div v-if="drawer.order.pickup_location === 'Other'">
+                            <div v-if="drawer.order.shipping_address">
+                                {{ drawer.order.shipping_address.company }}<br>
+                                {{ drawer.order.shipping_address.city }},
+                                {{ drawer.order.shipping_address.province_code }},
+                                {{ drawer.order.shipping_address.country_code }}
+                            </div>
+                            <div v-else-if="drawer.order.shipping_lines.length">
+                                <span class="bold">Pickup: </span>{{
+                                    drawer.order.shipping_lines[0].title
+                                }}
+                            </div>
+                            <div v-else>
+                                No address
+                            </div>
+                        </div>
+                    </div>
+
+                </el-card>
+            </div>
+
+        </el-drawer>
     </app-layout>
 </template>
 
@@ -153,6 +257,9 @@ export default {
     },
     data() {
         return {
+            drawer: {
+                order: null
+            },
             busy: {
                 orders: false
             },
@@ -167,7 +274,8 @@ export default {
             },
             filters: {
                 fulfillment_status: null,
-                financial_status: null
+                financial_status: null,
+                pickup_location: null
             },
             options: {
                 fulfillment_status: [
@@ -194,6 +302,9 @@ export default {
         }
     },
     methods: {
+        handleShowOrderDrawer(order) {
+            this.drawer.order = order;
+        },
         getOrders() {
             let self = this;
             this.busy.orders = true;
@@ -248,3 +359,9 @@ export default {
     }
 }
 </script>
+
+<style scoped>
+.drawer-order label {
+    font-weight: bold;
+}
+</style>

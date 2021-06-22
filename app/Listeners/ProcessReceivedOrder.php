@@ -3,6 +3,7 @@
 namespace App\Listeners;
 
 use App\Events\ReceivedOrder;
+use App\Helpers\ExceptionHelper;
 use App\Models\Order;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
@@ -49,6 +50,13 @@ class ProcessReceivedOrder
             if ($doSave) {
                 $order->created_at = $receivedOrder['created_at'];
                 $order->fillFromShopify($receivedOrder);
+
+                try {
+                    $order->pickup_location = $order->getShopifyPickLocation();
+                } catch (\Exception $e) {
+                    ExceptionHelper::logError($e, "Error while attempting to calculate the pickup location");
+                }
+
                 $order->save();
                 Log::debug('Order created/updated from received record', ['received_id' => $event->received->id]);
             } else {

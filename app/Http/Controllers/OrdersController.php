@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use App\Models\PickupLocation;
 use App\Models\Receive;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -15,7 +16,10 @@ class OrdersController extends Controller
             'Orders',
             [
                 'init-data' => [
-                    'orders' => $this->getOrders($request)
+                    'orders'  => $this->getOrders($request),
+                    'options' => [
+                        'pickup_locations' => PickupLocation::list()->get()
+                    ]
                 ]
             ]
         );
@@ -30,7 +34,7 @@ class OrdersController extends Controller
             ->where(function ($q) use ($filters) {
                 if ($filters) {
                     foreach ($filters as $key => $value) {
-                        if ($value !== null) {
+                        if (!blank($value)) {
                             $q->where($key, $value);
                         }
                     }

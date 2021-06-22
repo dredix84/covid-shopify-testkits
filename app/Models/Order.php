@@ -5,8 +5,17 @@ namespace App\Models;
 use App\Helpers\Util;
 use App\ModelTraits\ShopifyFill;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Arr;
 use Jenssegers\Mongodb\Eloquent\Model;
 
+/**
+ * Class Order
+ * @package App\Models
+ *
+ * @property int id
+ * @property int order_number
+ * @property string pickup_location
+ */
 class Order extends Model
 {
     use HasFactory;
@@ -22,8 +31,8 @@ class Order extends Model
     protected $with = ['customer'];
 
     protected $casts = [
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
+        'created_at'   => 'datetime',
+        'updated_at'   => 'datetime',
         'processed_at' => 'datetime',
     ];
 
@@ -59,6 +68,22 @@ class Order extends Model
 
         }
         return $outData;
+    }
+
+    public function getShopifyPickLocation()
+    {
+        $pickLocation = PickupLocation::PICKUP_OTHER;
+        if ($this->note_attributes) {
+            $filtered = Arr::where($this->note_attributes, function ($value, $key) {
+                return in_array($value['name'], ['Pickup-Location-Company', 'Order Location']);
+            });
+            if (count($filtered)) {
+                $location     = Arr::first($filtered);
+                $pickLocation = $location['value'];
+            }
+        }
+
+        return $pickLocation;
     }
 
     public function customer()
