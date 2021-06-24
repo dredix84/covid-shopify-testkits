@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\FeedbackSubmitted;
+use App\Http\Requests\FeedbackStore;
 use App\Models\Customer;
 use App\Models\Feedback;
 use Cassandra\Custom;
@@ -24,13 +25,8 @@ class FeedbackController extends Controller
         );
     }
 
-    public function store(Request $request)
+    public function store(FeedbackStore $request)
     {
-        $request->validate([
-            'employee_count'         => 'numeric|min:1',
-            'employee_participating' => 'numeric'
-        ]);
-
         $customer                = Customer::find($request->customer_id);
         $feedback                = Feedback::create($request->all());
         $customer->last_feedback = $feedback->toArray();

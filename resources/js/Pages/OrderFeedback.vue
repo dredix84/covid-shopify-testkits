@@ -25,7 +25,7 @@
                         <form v-show="!submitted" @submit.prevent="handleSubmitForm">
 
                             <div class="grid grid-cols-2 gap-4">
-                                <div class="mb-3">
+<!--                                <div class="mb-3">
                                     <label>
                                         Number of employees in the organization?
                                         <span class="show-required">*</span>
@@ -33,9 +33,9 @@
                                     <el-input-number v-model="form.employee_count" :min="0" :max="10000" :step="1"/>
                                     <div class="error-alert" v-if="form.errors.has('employee_count')"
                                          v-html="form.errors.get('employee_count')"/>
-                                </div>
+                                </div>-->
 
-                                <div class="mb-3">
+<!--                                <div class="mb-3">
                                     <label>
                                         Number of employees participating in screening?
                                         <span class="show-required">*</span>
@@ -43,7 +43,7 @@
                                     <el-input-number v-model="form.employee_participating" :min="0" :step="1"
                                                      :max="10000"></el-input-number>
                                     <div class="error-alert" v-if="form.errors.has('employee_participating')"/>
-                                </div>
+                                </div>-->
 
                                 <div class="mb-3">
                                     <label>
@@ -89,7 +89,7 @@
                                 </div>
                             </div>
 
-                            <div class="mb-3">
+<!--                            <div class="mb-3">
                                 <label>
                                     How would you rate your experience with rapid screening in the workplace?
                                     <span class="show-required">*</span>
@@ -100,9 +100,9 @@
                                     :texts="['Very bad', 'Bad', 'Ok', 'Good', 'Great']" show-text
                                     :colors="['#f6a249', '#4d9aff', '#6bee4a']"
                                 />
-                            </div>
+                            </div>-->
 
-                            <div class="mb-3">
+<!--                            <div class="mb-3">
                                 <label>
                                     Any feedback you would like to provide on using rapid screening in the workplace?
                                     <span class="show-required">*</span>
@@ -113,7 +113,7 @@
                                     placeholder="What's on your mind?"
                                     v-model="form.comment">
                                 </el-input>
-                            </div>
+                            </div>-->
 
 
                             <div>

@@ -8,13 +8,10 @@ use Illuminate\Http\Request;
 class XFrameOptions
 {
     /**
-     * Handle an incoming request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
-     * @return mixed
+     * @param  Request  $request
+     * @param  Closure  $next
      */
-    public function handle(Request $request, Closure $next)
+    public function handle(Request $request, Closure $next): void
     {
         $response = $next($request);
 
