@@ -13,7 +13,9 @@ class FeedbackController extends Controller
 {
     public function showForm(Request $request, $customerId)
     {
-        $customer = Customer::findOrFail($customerId);
+        $customer = Customer::where('_id', $customerId)
+            ->orWhere("shopify_id", (int) $customerId)
+            ->first();
         return Inertia::render(
             'OrderFeedback',
             [

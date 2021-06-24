@@ -1,6 +1,6 @@
 <template>
-    <app-layout>
-        <template #header>
+    <app-no-nav-layout>
+        <template #header v-if="customer">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight" @click="getOrders">
                 <div v-if="customer.default_address.company">{{ customer.default_address.company }}</div>
                 <div v-else> {{ customer.full_name }}</div>
@@ -8,14 +8,14 @@
         </template>
 
 
-        <div class="py-12">
+        <div class="py-12" v-if="customer">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                     <div class="p-6 sm:px-20 bg-white border-b border-gray-200">
 
                         <el-alert
                             v-show="submitted"
-                            title="success alert"
+                            title="Feedback submitted"
                             type="success"
                             effect="dark"
                             show-icon>
@@ -127,17 +127,30 @@
                 </div>
             </div>
         </div>
-    </app-layout>
+        <div class="py-12" v-else>
+            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
+                    <div class="p-6 sm:px-20 bg-white border-b border-gray-200">
+
+                        <p>Please place an order first then you will be able to submit feedback.</p>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </app-no-nav-layout>
 </template>
 
 <script>
 import AppLayout from "@/Layouts/AppLayout";
 import Form from 'vform'
+import AppNoNavLayout from "../Layouts/AppNoNavLayout";
 
 
 export default {
     name: "OrderFeedback",
     components: {
+        AppNoNavLayout,
         AppLayout
     },
     props: [
@@ -170,7 +183,9 @@ export default {
         }
     },
     created() {
-        this.form.customer_id = this.customer._id;
+        if (this.customer) {
+            this.form.customer_id = this.customer._id;
+        }
     }
 }
 </script>
