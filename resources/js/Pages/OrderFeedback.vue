@@ -117,7 +117,8 @@
 
 
                             <div>
-                                <el-button type="primary" @click="handleSubmitForm" :disabled="form.busy">Done
+                                <el-button type="primary" @click="handleSubmitForm" :disabled="form.busy">
+                                    Send Feedback
                                 </el-button>
                             </div>
                         </form>
