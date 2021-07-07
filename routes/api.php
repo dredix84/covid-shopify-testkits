@@ -3,6 +3,7 @@
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\OrdersController;
+use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -26,6 +27,11 @@ Route::post('/receiving', [\App\Http\Controllers\ReceiverController::class, 'rec
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/orders', [OrdersController::class, 'getOrders']);
     Route::get('/customer', [CustomerController::class, 'getCustomers']);
+
+    // User
+    Route::get('/users', [UserController::class, 'getUsers']);
+    Route::post('/users', [UserController::class, 'store']);
+    Route::delete('/users/{userId}', [UserController::class, 'destroy']);
 });
 
 

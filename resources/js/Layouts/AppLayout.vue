@@ -26,6 +26,10 @@
                                 <jet-nav-link :href="route('customers')" :active="route().current('customers')">
                                     Customers
                                 </jet-nav-link>
+                                <jet-nav-link :href="route('users')" :active="route().current('users')"
+                                              v-if="$page.props.user.is_admin">
+                                    Manage Users
+                                </jet-nav-link>
                             </div>
                         </div>
 
@@ -177,6 +181,16 @@
                     <div class="pt-2 pb-3 space-y-1">
                         <jet-responsive-nav-link :href="route('dashboard')" :active="route().current('dashboard')">
                             Dashboard
+                        </jet-responsive-nav-link>
+                        <jet-responsive-nav-link :href="route('orders')" :active="route().current('orders')">
+                            Orders
+                        </jet-responsive-nav-link>
+                        <jet-responsive-nav-link :href="route('customers')" :active="route().current('customers')">
+                            Customers
+                        </jet-responsive-nav-link>
+                        <jet-responsive-nav-link :href="route('users')" :active="route().current('users')"
+                                                 v-if="$page.props.user.is_admin">
+                            Manage Users
                         </jet-responsive-nav-link>
                     </div>
 
