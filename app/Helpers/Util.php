@@ -36,7 +36,6 @@ class Util
 
     public static function getPickupLocationFromOrder(Order $order)
     {
-        dd($order->note_attributes);
         $filtered = Arr::where($order->note_attributes, function ($value, $key) {
             return in_array($value['name'], ['Pickup-Location-Company', 'Order Location']);
         });
@@ -48,5 +47,47 @@ class Util
         }
 
         return $pickLocation;
+    }
+
+    /**
+     * Used to extract the postal code from the order notes array
+     * @param $orderNotes
+     * @return mixed|null
+     */
+    public static function getPostalCodeFromOrderNotesArray($orderNotes)
+    {
+        $postalCode = null;
+
+        $filtered = Arr::first($orderNotes, function ($value, $key) {
+            return $value['name'] === 'Pickup-Location-Postal-Code';
+        });
+        if ($filtered) {
+            $postalCode = $filtered['value'];
+        } else {
+            $filtered = Arr::first($orderNotes, function ($value, $key) {
+                return $value['name'] === 'Order Location Address';
+            });
+            if ($filtered) {
+                $address    = $filtered['value'];
+                $postalCode = Util::getPostcodeFromString($address);
+            }
+        }
+
+        return $postalCode;
+    }
+
+    /**
+     * Used to extract the Canadian postal code from a string
+     * @param $string
+     * @return string|null
+     */
+    public static function getPostcodeFromString($string)
+    {
+        $postcode      = null;
+        $postcodeRegex = "/[A-Z][0-9][A-Z]\s?[0-9][A-Z][0-9]/i";
+        if (preg_match($postcodeRegex, $string, $matches)) {
+            $postcode = $matches[0];
+        }
+        return $postcode;
     }
 }

@@ -26,6 +26,10 @@
                                 <jet-nav-link :href="route('customers')" :active="route().current('customers')">
                                     Customers
                                 </jet-nav-link>
+                                <jet-nav-link :href="route('reports')" :active="route().current('reports')"
+                                              v-if="$page.props.user.is_admin">
+                                    Reports
+                                </jet-nav-link>
                                 <jet-nav-link :href="route('users')" :active="route().current('users')"
                                               v-if="$page.props.user.is_admin">
                                     Manage Users
@@ -187,6 +191,10 @@
                         </jet-responsive-nav-link>
                         <jet-responsive-nav-link :href="route('customers')" :active="route().current('customers')">
                             Customers
+                        </jet-responsive-nav-link>
+                        <jet-responsive-nav-link :href="route('reports')" :active="route().current('reports')"
+                                                 v-if="$page.props.user.is_admin">
+                            Reports
                         </jet-responsive-nav-link>
                         <jet-responsive-nav-link :href="route('users')" :active="route().current('users')"
                                                  v-if="$page.props.user.is_admin">

@@ -22,6 +22,7 @@
         "laravel/sanctum": "^2.6",
         "laravel/telescope": "^4.4",
         "laravel/tinker": "^2.5",
+        "maatwebsite/excel": "^3.1",
         "tightenco/ziggy": "^1.0",
         "tucker-eric/eloquentfilter": "^3.0"
     },

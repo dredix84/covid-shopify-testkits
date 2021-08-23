@@ -3,8 +3,10 @@
 namespace App\Models;
 
 use App\Helpers\ExceptionHelper;
+use App\Helpers\Util;
 use App\ModelTraits\ShopifyFill;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Log;
 use Jenssegers\Mongodb\Eloquent\Model;
 
@@ -49,6 +51,38 @@ class Customer extends Model
         return $this->Orders()->count();
     }
 
+    /**
+     * THis functions tries to figure out the postal code for the last pickup location the customer ordered from
+     * @return string|null
+     */
+    public function getLastPickupPostalCodeAttribute(): ?string
+    {
+        $postalCode = null;
+        try {
+            if (isset($this->last_order) && !blank($this->last_order['note_attributes'])) {
+                $postalCode = Util::getPostalCodeFromOrderNotesArray($this->last_order['note_attributes']);
+
+            }
+
+            if ($postalCode === null) {
+                $lastOrder = $this->getNewestOrderAttribute();
+
+                $postalCode = Util::getPostalCodeFromOrderNotesArray($lastOrder->note_attributes);
+                if ($postalCode === null && isset($this->getNewestOrderAttribute()->line_items[0]['origin_location'])) {
+                    $postalCode = $this->getNewestOrderAttribute()->line_items[0]['origin_location']['zip'];
+                }
+                if ($postalCode === null && isset($this->getNewestOrderAttribute()->shipping_address)) {
+                    $postalCode = $this->getNewestOrderAttribute()->shipping_address['zip'];
+                }
+            }
+
+        } catch (\Exception $e) {
+            $postalCode = 'Unknown';
+        }
+
+        return $postalCode;
+    }
+
     public function Orders()
     {
         return $this->hasMany(Order::class, 'email', 'email');
@@ -90,13 +124,17 @@ class Customer extends Model
     public function getNewestOrderAttribute()
     {
         if (!blank($this->id)) {
-            return Order::where('email', $this->email)
+            $lastOrderId = $this->last_order_id ?? null;
+            $email       = $this->email ?? null;
+            return Order::where(function ($query) use ($email, $lastOrderId) {
+                $query->where('email', $email);
+                if ($lastOrderId) {
+                    $query->orWhere('shopify_id', $lastOrderId);
+                }
+            })
                 ->orderBy('created_at', 'desc')
                 ->first();
         }
         return null;
-//        return $this->Orders()
-//            ->orderBy('created_at', 'desc')
-//            ->limit(1);
     }
 }

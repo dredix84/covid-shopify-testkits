@@ -4,6 +4,7 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\OrdersController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\UserController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -23,6 +24,10 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('/orders', [OrdersController::class, 'index'])->name('orders');
     Route::get('/customers', [CustomerController::class, 'index'])->name('customers');
     Route::get('/users', [UserController::class, 'index'])->name('users');
+
+    // Reports
+    Route::get('/reports', [ReportController::class, 'index'])->name('reports');
+    Route::post('/reports/feedback', [ReportController::class, 'reportAggregateFeedback']);
 });
 
 Route::get('/feedback/{customerId}', [FeedbackController::class, 'showForm'])->name('feedback.form');

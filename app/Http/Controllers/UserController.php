@@ -15,15 +15,6 @@ class UserController extends Controller
 {
     public function index(AdminOnly $request)
     {
-//        if (!auth()->user()->is_admin) {
-//            Log::warning(
-//                'Unauthorized user attempting to access the user management page',
-//                [
-//                    'user_id' => auth()->user()->id
-//                ]
-//            );
-//            abort(403, 'You are not authorized to access this area');
-//        }
         return Inertia::render(
             'ManageUsers',
             [
