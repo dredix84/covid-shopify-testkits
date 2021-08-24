@@ -32,6 +32,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/users', [UserController::class, 'getUsers']);
     Route::post('/users', [UserController::class, 'store']);
     Route::delete('/users/{userId}', [UserController::class, 'destroy']);
+
+    // Feedback
+    Route::get('/feedback/{customerId}', [FeedbackController::class, 'getByCustomerId']);
 });
 
 

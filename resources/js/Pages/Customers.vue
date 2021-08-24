@@ -235,7 +235,30 @@
                 </div>
             </div>
         </el-drawer>
+        <el-drawer
+            title="Customer Feedback"
+            v-model="feedbackDrawer.show"
+        >
+            <div
+                class="drawer-info m-1" v-if="feedbackDrawer.data && feedbackDrawer.data.length > 0"
+                style="height: 95vh; overflow: scroll"
+            >
 
+                <el-card class="box-card mb-3" v-for="feedback in feedbackDrawer.data">
+                    <template #header>
+                        <div class="card-header">
+                            <span>{{ formatDateTime(feedback.created_at) }}</span>
+                        </div>
+                    </template>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>Administered: {{ feedback.antigen_tests_administered }}</div>
+                        <div>Inconclusive: {{ feedback.inconclusive }}</div>
+                        <div>Negative: {{ feedback.presumptive_negative }}</div>
+                        <div>Positive: {{ feedback.presumptive_positive }}</div>
+                    </div>
+                </el-card>
+            </div>
+        </el-drawer>
     </app-layout>
 </template>
 
@@ -243,6 +266,7 @@
 
 import AppLayout from '@/Layouts/AppLayout'
 import moment from "moment";
+import axios from "axios";
 
 export default {
     name: "Customers",
@@ -256,6 +280,10 @@ export default {
     data() {
         return {
             drawer: {
+                show: false,
+                data: null
+            },
+            feedbackDrawer: {
                 show: false,
                 data: null
             },
@@ -309,8 +337,24 @@ export default {
     methods: {
         handleCustomerMoreCommandClick(command) {
             let commmandData = command.split(',');
-
+            console.log(commmandData);
             switch (commmandData[1]) {
+                case "feedback":
+                    this.feedbackDrawer.show = true;
+                    this.feedbackDrawer.data = null;
+                    axios.get('/api/feedback/' + commmandData[0])
+                        .then(({data}) => {
+                            this.feedbackDrawer.data = data;
+                        })
+                        .catch(err => {
+                            console.log(err);
+                            this.$notify({
+                                title: 'Error',
+                                message: 'There was an error while attempting to retrieve the feedback data',
+                                type: 'error'
+                            });
+                        })
+                    break;
                 case "newFeedback":
                     window.open('/feedback/' + commmandData[0], '_blank').focus();
                     break;

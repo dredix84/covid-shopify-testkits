@@ -36,4 +36,9 @@ class FeedbackController extends Controller
 
         return $feedback;
     }
+
+    public static function getByCustomerId(Request $request, $customerId)
+    {
+        return Feedback::where('customer_id', $customerId)->get();
+    }
 }
