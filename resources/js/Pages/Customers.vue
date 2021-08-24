@@ -189,6 +189,17 @@
                                     </template>
                                 </el-table-column>
                             </el-table>
+                            <div>
+                                <el-pagination
+                                    @size-change="handleSizeChange"
+                                    @current-change="handleCurrentChange"
+                                    v-model:currentPage="tableData.current_page"
+                                    :page-sizes="[25, 50, 100, 200, 300, 400]"
+                                    :page-size="tableData.per_page"
+                                    layout="sizes, prev, pager, next, total, slot"
+                                    :total="tableData.total">
+                                </el-pagination>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -243,8 +254,7 @@
                 class="drawer-info m-1" v-if="feedbackDrawer.data && feedbackDrawer.data.length > 0"
                 style="height: 95vh; overflow: scroll"
             >
-
-                <el-card class="box-card mb-3" v-for="feedback in feedbackDrawer.data">
+                <el-card class="box-card mb-3 mx-1" v-for="feedback in feedbackDrawer.data">
                     <template #header>
                         <div class="card-header">
                             <span>{{ formatDateTime(feedback.created_at) }}</span>
@@ -257,6 +267,13 @@
                         <div>Positive: {{ feedback.presumptive_positive }}</div>
                     </div>
                 </el-card>
+            </div>
+            <div class="p-2 drawer-info" v-else>
+                <el-alert
+                    title="No feedback received"
+                    type="warning"
+                    :closable="false"
+                />
             </div>
         </el-drawer>
     </app-layout>
