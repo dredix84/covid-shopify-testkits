@@ -251,7 +251,7 @@
             v-model="feedbackDrawer.show"
         >
             <div
-                class="drawer-info m-1" v-if="feedbackDrawer.data && feedbackDrawer.data.length > 0"
+                class="font-10 m-1" v-if="feedbackDrawer.data && feedbackDrawer.data.length > 0"
                 style="height: 95vh; overflow: scroll"
             >
                 <el-card class="box-card mb-3 mx-1" v-for="feedback in feedbackDrawer.data">
@@ -260,7 +260,7 @@
                             <span>{{ formatDateTime(feedback.created_at) }}</span>
                         </div>
                     </template>
-                    <div class="grid grid-cols-2 gap-4">
+                    <div class="grid grid-cols-2 gap-4 font-10">
                         <div>Administered: {{ feedback.antigen_tests_administered }}</div>
                         <div>Inconclusive: {{ feedback.inconclusive }}</div>
                         <div>Negative: {{ feedback.presumptive_negative }}</div>
