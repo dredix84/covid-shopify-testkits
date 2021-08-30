@@ -61,7 +61,6 @@ class Customer extends Model
         try {
             if (isset($this->last_order) && !blank($this->last_order['note_attributes'])) {
                 $postalCode = Util::getPostalCodeFromOrderNotesArray($this->last_order['note_attributes']);
-
             }
 
             if ($postalCode === null) {
@@ -81,6 +80,21 @@ class Customer extends Model
         }
 
         return $postalCode;
+    }
+
+    public function getLastPickLocationNameAttribute()
+    {
+        $locationName = null; //Pickup-Location-Company
+        if (isset($this->last_order) && !blank($this->last_order['note_attributes'])) {
+            $data = Arr::first($this->last_order['note_attributes'], function ($value, $key) {
+                return $value['name'] === 'Pickup-Location-Company';
+            });
+            if ($data) {
+                $locationName = $data['value'];
+            }
+        }
+
+        return $locationName;
     }
 
     public function Orders()

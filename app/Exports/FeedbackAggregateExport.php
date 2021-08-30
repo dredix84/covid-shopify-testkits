@@ -23,6 +23,8 @@ class FeedbackAggregateExport implements FromArray, Responsable
     private $startDate;
     private $endDate;
 
+    private $locationNames = [];
+
     public function __construct()
     {
         $request         = request();
@@ -55,10 +57,20 @@ class FeedbackAggregateExport implements FromArray, Responsable
                     'last_order', 'last_order_id', 'email', 'shopify_id'
                 ])->find($customerId);
                 $postalCode = $customer->last_pickup_postal_code;
+                if (isset($this->locationNames[$postalCode])) {
+                    $pickupLocation = $this->locationNames[$postalCode];
+                } else {
+                    $pickupLocation = $customer->lastPickLocationName;
+                    if ($pickupLocation !== null) {
+                        $this->locationNames[$postalCode] = $pickupLocation;
+                    } else {
+                        $pickupLocation = 'Unknown';
+                    }
+                }
             }
 
             $reportData[$customerId] = [
-                'id'          => $customerId,
+                'id'          => sprintf('%s - %s', $pickupLocation, $customerId),
                 'postal_code' => $postalCode,
                 'test_type'   => 'Rapid Test',
                 'used'        => 0,
