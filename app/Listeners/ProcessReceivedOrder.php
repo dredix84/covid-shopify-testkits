@@ -5,6 +5,7 @@ namespace App\Listeners;
 use App\Events\ReceivedOrder;
 use App\Helpers\ExceptionHelper;
 use App\Models\Order;
+use App\Models\PickupLocation;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Log;
@@ -40,9 +41,6 @@ class ProcessReceivedOrder
                 'shopify_id' => $receivedOrder['id']
             ]);
 
-//            dd($headerTopic, !blank($order->id), $headerTopic === Order::SHOPIFY_HEADER_TOPIC_CREATE,
-//                !blank($order->id) && $headerTopic === Order::SHOPIFY_HEADER_TOPIC_CREATE
-//            );
             if (!blank($order->id) && $headerTopic === Order::SHOPIFY_HEADER_TOPIC_CREATE) {
                 $doSave = false;
             }
@@ -53,6 +51,9 @@ class ProcessReceivedOrder
 
                 try {
                     $order->pickup_location = $order->getShopifyPickLocation();
+                    PickupLocation::firstOrCreate([
+                        'name' => $order->pickup_location
+                    ]);
                 } catch (\Exception $e) {
                     ExceptionHelper::logError($e, "Error while attempting to calculate the pickup location");
                 }
