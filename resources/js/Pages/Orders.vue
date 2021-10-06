@@ -21,6 +21,7 @@
                                 class="mr-2"
                                 clearable
                                 placeholder="Fulfillment Status"
+                                filterable
                             >
                                 <el-option
                                     v-for="item in options.fulfillment_status"
@@ -33,6 +34,7 @@
                                 class="mr-2"
                                 placeholder="Payment Status"
                                 clearable
+                                filterable
                             >
                                 <el-option v-for="item in options.payment_status" :value="item.value"
                                            :label="item.label"/>
@@ -43,6 +45,7 @@
                                 class="mr-2"
                                 placeholder="Pickup Location"
                                 clearable
+                                filterable
                             >
                                 <el-option
                                     :value="null"
@@ -340,6 +343,7 @@ export default {
         },
         handleSizeChange(val) {
             console.log(`${val} items per page`);
+            this.tableData.per_page = val;
             this.getOrders();
         },
         handleCurrentChange(val) {
