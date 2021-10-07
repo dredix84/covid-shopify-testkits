@@ -22,6 +22,10 @@
             1. docker-in-docker
     - Build container with the command `docker-compose build`
 
+## Package Documentation
+- http://tucker-eric.github.io/EloquentFilter/
+- https://moloquent.github.io/master/
+
 ## About Laravel
 
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:

@@ -40,12 +40,13 @@ class OrdersController extends Controller
         $user = auth()->user();
 
         return Order::orderBy('order_number', 'desc')
+            ->filter($request->all())
             ->where(function ($q) use ($user) {
                 if (!$user->is_admin) {
                     $q->whereIn('pickup_location', $user->getPickupLocationName());
                 }
             })
-            ->where(function ($q) use ($filters) {
+            /*->where(function ($q) use ($filters) {
                 if ($filters) {
                     foreach ($filters as $key => $value) {
                         if (!blank($value)) {
@@ -53,7 +54,7 @@ class OrdersController extends Controller
                         }
                     }
                 }
-            })
+            })*/
             ->paginate((int) $per_page);
     }
 }

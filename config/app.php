@@ -180,6 +180,7 @@ return [
 
         Jenssegers\Mongodb\MongodbServiceProvider::class,
 
+        eloquentFilter\ServiceProvider::class,
         EloquentFilter\ServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
     ],

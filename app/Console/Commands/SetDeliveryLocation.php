@@ -57,19 +57,6 @@ class SetDeliveryLocation extends Command
         $ordersQuery->chunk(100, function ($orders) use (&$pickLocations, &$bar) {
             foreach ($orders as $order) {
                 /** @var Order $order */
-//                dd($order->toArray());
-//                $filtered = Arr::where($order->note_attributes, function ($value, $key) {
-//                    return in_array($value['name'], ['Pickup-Location-Company', 'Order Location']);
-//                });
-//
-//                $pickLocation = PickupLocation::PICKUP_OTHER;
-//                if (count($filtered)) {
-//                    $location                     = Arr::first($filtered);
-//                    $pickLocation                 = $location['value'];
-//                    $pickLocations[$pickLocation] = $pickLocation;
-//                }
-//                $order->pickup_location = $pickLocation;
-//                $order->save();
 
                 $pickupLocation                 = $order->getShopifyPickLocation();
                 $order->pickup_location         = $pickupLocation;

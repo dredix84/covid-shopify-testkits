@@ -16,48 +16,66 @@
 
                         <div>
                             <h2>Filters</h2>
-                            <el-select
-                                v-model="filters.fulfillment_status"
-                                class="mr-2"
-                                clearable
-                                placeholder="Fulfillment Status"
-                                filterable
-                            >
-                                <el-option
-                                    v-for="item in options.fulfillment_status"
-                                    :value="item.value"
-                                    :label="item.label"
-                                />
-                            </el-select>
-                            <el-select
-                                v-model="filters.financial_status"
-                                class="mr-2"
-                                placeholder="Payment Status"
-                                clearable
-                                filterable
-                            >
-                                <el-option v-for="item in options.payment_status" :value="item.value"
-                                           :label="item.label"/>
-                            </el-select>
 
-                            <el-select
-                                v-model="filters.pickup_location"
-                                class="mr-2"
-                                placeholder="Pickup Location"
-                                clearable
-                                filterable
-                            >
-                                <el-option
-                                    :value="null"
-                                    label="Any Pickup Location"
-                                />
-                                <el-option
-                                    v-for="item in initData.options.pickup_locations"
-                                    :value="item.name"
-                                    :label="item.name"
-                                />
-                            </el-select>
-                            <el-button type="primary" @click="getOrders">Search</el-button>
+                            <form class="grid grid-cols-5 gap-4" @submit.prevent="getOrders">
+                                <div>
+                                    <el-input
+                                        v-model="filters.term"
+                                        clearable
+                                        placeholder="Order #, email or customer name"
+                                        v-on:keyup.enter="getOrders"
+                                    />
+                                </div>
+                                <div>
+                                    <el-select
+                                        v-model="filters.fulfillment_status"
+                                        style="width: 100%"
+                                        clearable
+                                        placeholder="Fulfillment Status"
+                                        filterable
+                                    >
+                                        <el-option
+                                            v-for="item in options.fulfillment_status"
+                                            :value="item.value"
+                                            :label="item.label"
+                                        />
+                                    </el-select>
+                                </div>
+                                <div>
+                                    <el-select
+                                        v-model="filters.financial_status"
+                                        class="mr-2"
+                                        placeholder="Payment Status"
+                                        clearable
+                                        filterable
+                                    >
+                                        <el-option v-for="item in options.payment_status" :value="item.value"
+                                                   :label="item.label"/>
+                                    </el-select>
+                                </div>
+                                <div>
+                                    <el-select
+                                        v-model="filters.pickup_location"
+                                        class="mr-2"
+                                        placeholder="Pickup Location"
+                                        clearable
+                                        filterable
+                                    >
+                                        <el-option
+                                            :value="null"
+                                            label="Any Pickup Location"
+                                        />
+                                        <el-option
+                                            v-for="item in initData.options.pickup_locations"
+                                            :value="item.name"
+                                            :label="item.name"
+                                        />
+                                    </el-select>
+                                </div>
+                                <div>
+                                    <el-button type="primary" @click="getOrders">Search</el-button>
+                                </div>
+                            </form>
                         </div>
 
                         <div class="mt-6 text-gray-500">
@@ -276,6 +294,7 @@ export default {
                 data: []
             },
             filters: {
+                term: null,
                 fulfillment_status: null,
                 financial_status: null,
                 pickup_location: null
@@ -314,7 +333,7 @@ export default {
             let params = {
                 per_page: this.tableData.per_page,
                 page: this.tableData.current_page,
-                filters: this.filters
+                ...this.filters
             };
 
             axios.get('/api/orders', {params})

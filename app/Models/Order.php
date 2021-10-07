@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Helpers\Util;
 use App\ModelTraits\ShopifyFill;
+use EloquentFilter\Filterable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Arr;
 use Jenssegers\Mongodb\Eloquent\Model;
@@ -20,6 +21,7 @@ class Order extends Model
 {
     use HasFactory;
     use ShopifyFill;
+    use Filterable;
 
     const SHOPIFY_HEADER_TOPIC_CREATE  = 'orders/create';
     const SHOPIFY_HEADER_TOPIC_UPDATED = 'orders/updated';
