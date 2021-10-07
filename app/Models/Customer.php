@@ -109,6 +109,10 @@ class Customer extends Model
         return $this->hasMany(Order::class, 'email', 'email');
     }
 
+    public function NewestFulfilledOrder(){
+        return $this->hasOne(Order::class, 'email', 'email')->latestOfMany();
+    }
+
     public function getItemCountAttribute()
     {
         try {

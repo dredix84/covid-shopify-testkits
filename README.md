@@ -27,6 +27,7 @@
 - http://tucker-eric.github.io/EloquentFilter/
 - https://moloquent.github.io/master/
 - https://tailwindcss.com/docs
+- https://github.com/barryvdh/laravel-ide-helper
 
 ## About Laravel
 

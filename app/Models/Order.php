@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Helpers\ExceptionHelper;
 use App\Helpers\Util;
 use App\ModelTraits\ShopifyFill;
 use EloquentFilter\Filterable;
@@ -58,7 +59,7 @@ class Order extends Model
     {
         $outData = [];
         try {
-            $values = self::distinct('shipping_lines.title')
+            $values = self::distinct('pickup_location')
                 ->get();
             if ($values) {
                 foreach ($values as $value) {
@@ -69,7 +70,7 @@ class Order extends Model
                 }
             }
         } catch (\Exception $e) {
-
+            ExceptionHelper::logError($e, 'Orders:getShippingTitles Error while getting shipping locations.');
         }
         return $outData;
     }
