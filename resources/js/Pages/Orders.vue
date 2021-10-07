@@ -211,7 +211,7 @@
                         <span v-else class="allow-no">{{ drawer.order.customer.allow_fulfillment }}</span>
                     </div>
                     <div class="text item">
-                        <span class="bold mr-3">Percentage administered:</span>:
+                        <span class="bold mr-3">Percentage Administered:</span>:
                         {{ drawer.order.customer.percentage_administered }}%
                     </div>
                     <div class="text item">

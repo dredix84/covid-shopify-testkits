@@ -158,6 +158,16 @@ class Customer extends Model
                     return 'No feedback submitted';
                 }
 
+                //Determining if the user has used less than the allowed amount before reorder
+                $minReorderPercent      = config('shopify.min_reorder_percent');
+                $percentageAdministered = $this->getPercentageAdministeredAttribute();
+                if ($percentageAdministered < config('shopify.min_reorder_percent')) {
+                    return sprintf('Less than %s%% used.', $minReorderPercent);
+                }
+                if ($percentageAdministered >= 100) {
+                    return true;
+                }
+
                 // Determining if the user submitted feedback
                 if (isset($this->last_order['created_at'])) {
                     $lastOrderCreatedAt = $this->last_order['created_at'];
@@ -174,11 +184,6 @@ class Customer extends Model
                     return 'No feedback submitted after last order';
                 }
 
-                //Determining if the user has used less than the allowed amount before reorder
-                $minReorderPercent = config('shopify.min_reorder_percent');
-                if ($this->getPercentageAdministeredAttribute() < config('shopify.min_reorder_percent')) {
-                    return sprintf('Less than %s%% used.', $minReorderPercent);
-                }
 
             }
         } catch (\Exception $e) {
