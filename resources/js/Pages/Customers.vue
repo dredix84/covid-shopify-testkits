@@ -150,13 +150,12 @@
                                 >
                                     <template #default="scope">
                                         <div>
-                                            <span v-if="calculateAllowFulfilment(scope.row) === true" class="allow-yes">
+                                            <span v-if="scope.row.allow_fulfillment === true" class="allow-yes">
                                                 Yes
                                             </span>
                                             <span v-else class="allow-no">
-                                                <span class="bold">No</span>: {{ calculateAllowFulfilment(scope.row) }}
+                                                {{ scope.row.allow_fulfillment }}
                                             </span>
-<!--                                            <br/>-> {{ scope.row.allow_fulfillment }} <- -->
                                         </div>
                                     </template>
                                 </el-table-column>

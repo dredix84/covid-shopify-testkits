@@ -178,6 +178,8 @@ class Customer extends Model
                     $tempLastOrder               = $this->last_order;
                     $tempLastOrder['created_at'] = $lastOrderCreatedAt;
                     $this->last_order            = $tempLastOrder;
+                    $this->save();
+                    Log::info("Auto updating customer last order created for customer: ".$this->id);
                 }
 
                 if ($this->last_order && $this->last_feedback && $lastOrderCreatedAt > $this->last_feedback['created_at']) {
@@ -196,20 +198,6 @@ class Customer extends Model
 
         return true;
     }
-
-    /*public function getLastFeedbackAttribute()
-    {
-        if (!blank($this->id)) {
-            return Feedback::where('customer_id', $this->id)
-                ->orderBy('created_at', 'desc')
-                ->first();
-        }
-        return null;
-//        return null;
-//        return $this->hasMany(Feedback::class, 'customer_id', '_id')
-//            ->orderBy('created_at', 'desc')
-//            ->limit(1);
-    }*/
 
     public function getNewestOrderAttribute()
     {

@@ -23,8 +23,10 @@
     - Build container with the command `docker-compose build`
 
 ## Package Documentation
+- https://moloquent.github.io/master/
 - http://tucker-eric.github.io/EloquentFilter/
 - https://moloquent.github.io/master/
+- https://tailwindcss.com/docs
 
 ## About Laravel
 

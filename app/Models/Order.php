@@ -28,7 +28,9 @@ class Order extends Model
 
     protected $fillable = ['*', 'created_at', 'updated_at'];
 
-    protected $fillableExceptions = [/*'created_at', 'updated_at',*/ 'customer'];
+    protected $fillableExceptions = [/*'created_at', 'updated_at',*/
+        'customer'
+    ];
 
     protected $with = ['customer'];
 
@@ -94,4 +96,20 @@ class Order extends Model
     }
 
 
+    // Scopes
+
+    /**
+     * Only show records for the locations I am allowed to see
+     * @param $query
+     * @return mixed
+     */
+    public function scopeMine($query)
+    {
+        $user = auth()->user();
+        return $query->where(function ($q) use ($user) {
+            if (!$user->is_admin) {
+                $q->whereIn('pickup_location', $user->getPickupLocationName());
+            }
+        });
+    }
 }
