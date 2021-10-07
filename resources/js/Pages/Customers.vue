@@ -156,6 +156,7 @@
                                             <span v-else class="allow-no">
                                                 <span class="bold">No</span>: {{ calculateAllowFulfilment(scope.row) }}
                                             </span>
+<!--                                            <br/>-> {{ scope.row.allow_fulfillment }} <- -->
                                         </div>
                                     </template>
                                 </el-table-column>
@@ -477,19 +478,7 @@ export default {
 </script>
 
 <style scoped>
-.allow-no {
-    color: black;
-    background-color: #ffb7b7;
-    padding: 2px 5px;
-    border-radius: 5px;
-}
 
-.allow-yes {
-    color: white;
-    background-color: green;
-    padding: 2px 5px;
-    border-radius: 5px;
-}
 
 .drawer-info {
     font-size: 12pt;

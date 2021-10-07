@@ -17,19 +17,20 @@
                         <div>
                             <h2>Filters</h2>
 
-                            <form class="grid grid-cols-5 gap-4" @submit.prevent="getOrders">
-                                <div>
+                            <form class="grid grid-cols-10 gap-2" @submit.prevent="getOrders">
+                                <div class="col-span-2">
                                     <el-input
                                         v-model="filters.term"
                                         clearable
                                         placeholder="Order #, email or customer name"
                                         v-on:keyup.enter="getOrders"
+                                        :autocomplete="false"
                                     />
                                 </div>
-                                <div>
+                                <div class="col-span-2">
                                     <el-select
                                         v-model="filters.fulfillment_status"
-                                        style="width: 100%"
+                                        class="width-100"
                                         clearable
                                         placeholder="Fulfillment Status"
                                         filterable
@@ -41,10 +42,10 @@
                                         />
                                     </el-select>
                                 </div>
-                                <div>
+                                <div class="col-span-2">
                                     <el-select
                                         v-model="filters.financial_status"
-                                        class="mr-2"
+                                        class="width-100"
                                         placeholder="Payment Status"
                                         clearable
                                         filterable
@@ -53,10 +54,10 @@
                                                    :label="item.label"/>
                                     </el-select>
                                 </div>
-                                <div>
+                                <div class="col-span-2">
                                     <el-select
                                         v-model="filters.pickup_location"
-                                        class="mr-2"
+                                        class="width-100"
                                         placeholder="Pickup Location"
                                         clearable
                                         filterable
@@ -108,7 +109,7 @@
                                 <el-table-column
                                     prop="order_number"
                                     label="Order"
-                                    width="60">
+                                    width="65">
                                     <template #default="scope">
                                         <el-button type="text" @click="handleShowOrderDrawer(scope.row)">
                                             {{ scope.row.order_number }}
@@ -189,27 +190,52 @@
             <div class="p-3 drawer-order" style="font-size: 12px" v-if="drawer.order">
                 <el-card class="box-card mb-3">
                     <template #header>
-                        <div class="card-header">
+                        <div class="card-header bold">
+                            <span>Action</span>
+                        </div>
+                    </template>
+
+                    <el-button type="primary" plain size="small" @click="handleShowCustomerOrders">View Orders
+                    </el-button>
+                </el-card>
+
+                <el-card class="box-card mb-3">
+                    <template #header>
+                        <div class="card-header bold">
                             <span>Customer Details</span>
                         </div>
                     </template>
                     <div class="text item">
-                        Name: {{ drawer.order.customer.full_name }}
+                        <span class="bold mr-3">Allow Fulfillment:</span>:
+                        <span v-if="drawer.order.customer.allow_fulfillment === true" class="allow-yes">Yes</span>
+                        <span v-else class="allow-no">{{ drawer.order.customer.allow_fulfillment }}</span>
                     </div>
                     <div class="text item">
-                        Order Count: {{ drawer.order.customer.orders_count }}
+                        <span class="bold mr-3">Percentage administered:</span>:
+                        {{ drawer.order.customer.percentage_administered }}%
                     </div>
                     <div class="text item">
-                        Email Address: {{ drawer.order.customer.email }}
+                        <span class="bold mr-3">Name:</span> {{ drawer.order.customer.full_name }}
                     </div>
                     <div class="text item">
-                        Phone: {{ drawer.order.customer.phone }}
+                        <span class="bold mr-3">Order Count:</span>
+                        <span class="clickable" @click="handleShowCustomerOrders">
+                            {{ drawer.order.customer.orders_count }}
+                        </span>
+                    </div>
+                    <div class="text item">
+                        <span class="bold mr-3">Email Address:</span>
+                        <a :href="'mailto:' + drawer.order.customer.email">{{ drawer.order.customer.email }}</a>
+                    </div>
+                    <div class="text item">
+                        <span class="bold mr-3">Phone:</span>
+                        <a :href="'tel:' + drawer.order.customer.phone">{{ drawer.order.customer.phone }}</a>
                     </div>
                 </el-card>
 
                 <el-card class="box-card mb-3">
                     <template #header>
-                        <div class="card-header">
+                        <div class="card-header bold">
                             <span>Order Details</span>
                         </div>
                     </template>
@@ -229,7 +255,7 @@
 
                 <el-card class="box-card">
                     <template #header>
-                        <div class="card-header">
+                        <div class="card-header bold">
                             <span>Pickup/Delivery Details</span>
                         </div>
                     </template>
@@ -299,6 +325,7 @@ export default {
                 financial_status: null,
                 pickup_location: null
             },
+            blankFilter: {},
             options: {
                 fulfillment_status: [
                     {label: 'Any Fulfillment Status', value: null},
@@ -324,8 +351,17 @@ export default {
         }
     },
     methods: {
+        handleShowCustomerOrders() {
+            this.resetFilters();
+            this.filters.term = this.drawer.order.email;
+            this.getOrders();
+            this.drawer.order = null;
+        },
         handleShowOrderDrawer(order) {
             this.drawer.order = order;
+        },
+        resetFilters() {
+            this.filters = Object.assign({}, this.blankFilter);
         },
         getOrders() {
             let self = this;
@@ -378,7 +414,7 @@ export default {
     },
     mounted() {
         this.tableData = this.initData.orders;
-        // this.getOrders();
+        this.blankFilter = Object.assign({}, this.filters);
     }
 }
 </script>

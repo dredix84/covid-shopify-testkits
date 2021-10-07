@@ -319,7 +319,7 @@ export default {
                     console.error(err);
                     self.$notify.error({
                         title: 'Error',
-                        message: 'This is an error message'
+                        message: 'There was an error. Please refresh and try again.'
                     });
                 })
                 .finally(function () {

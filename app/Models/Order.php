@@ -28,7 +28,7 @@ class Order extends Model
 
     protected $fillable = ['*', 'created_at', 'updated_at'];
 
-    protected $fillableExceptions = ['created_at', 'updated_at', 'customer'];
+    protected $fillableExceptions = [/*'created_at', 'updated_at',*/ 'customer'];
 
     protected $with = ['customer'];
 

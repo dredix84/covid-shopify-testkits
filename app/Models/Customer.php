@@ -24,6 +24,7 @@ use Jenssegers\Mongodb\Eloquent\Model;
  * @property array last_order
  * @property array last_feedback
  * @property int total_administered
+ * @property int item_count
  */
 class Customer extends Model
 {
@@ -34,7 +35,13 @@ class Customer extends Model
 
     protected $fillableExceptions = ['created_at', 'updated_at'];
 
-    protected $appends = ['full_name', 'OrdersCount', 'item_count'/*, 'last_feedback'*/];
+    protected $appends = [
+        'full_name',
+        'OrdersCount',
+        'item_count'/*, 'last_feedback'*/,
+        'allow_fulfillment',
+        'percentage_administered'
+    ];
 
     protected $casts = [
 //        'last_feedback' => 'array',
@@ -119,6 +126,70 @@ class Customer extends Model
         }
 
         return 0;
+    }
+
+    /**
+     * Calculates the percentage of kits administered
+     * @return false|float|int
+     */
+    public function getPercentageAdministeredAttribute()
+    {
+        $outValue = 0;
+        try {
+            if (isset($this->total_administered, $this->item_count) && $this->item_count > 0) {
+                $outValue = $this->total_administered / ($this->item_count * 25) * 100;
+            }
+        } catch (\Exception $e) {
+            ExceptionHelper::logError($e, 'Error calculating the percentage administered for '.$this->email);
+        }
+
+        return $outValue > 0 && $outValue <= 100 ? floor($outValue) : 0;
+    }
+
+    /**
+     * Used to determine is the customer should be give more kits. Returns true if should allow
+     * @return bool|string
+     */
+    public function getAllowFulfillmentAttribute()
+    {
+        try {
+            if ($this->getItemCountAttribute() > 0 && !blank($this->last_order)) {
+                if ($this->last_order && $this->last_feedback === null) {
+                    return 'No feedback submitted';
+                }
+
+                // Determining if the user submitted feedback
+                if (isset($this->last_order['created_at'])) {
+                    $lastOrderCreatedAt = $this->last_order['created_at'];
+                } else {
+                    $lastOrder          = Order::where('order_number', $this->last_order['order_number'])->first();
+                    $lastOrderCreatedAt = $lastOrder->created_at ?? null;
+
+                    $tempLastOrder               = $this->last_order;
+                    $tempLastOrder['created_at'] = $lastOrderCreatedAt;
+                    $this->last_order            = $tempLastOrder;
+                }
+
+                if ($this->last_order && $this->last_feedback && $lastOrderCreatedAt > $this->last_feedback['created_at']) {
+                    return 'No feedback submitted after last order';
+                }
+
+                //Determining if the user has used less than the allowed amount before reorder
+                $minReorderPercent = config('shopify.min_reorder_percent');
+                if ($this->getPercentageAdministeredAttribute() < config('shopify.min_reorder_percent')) {
+                    return sprintf('Less than %s%% used.', $minReorderPercent);
+                }
+
+            }
+        } catch (\Exception $e) {
+            ExceptionHelper::logError(
+                $e,
+                "There was an error which attempting to calculate the allow fulfillment status for ".$this->email
+            );
+            return "Unable to calculate";
+        }
+
+        return true;
     }
 
     /*public function getLastFeedbackAttribute()

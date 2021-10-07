@@ -14,3 +14,25 @@
 .font-12{
     font-size: 12pt;
 }
+
+.width-100{
+    width: 100%;
+}
+
+.clickable{
+    cursor: pointer;
+}
+
+.allow-no {
+    color: black;
+    background-color: #ffb7b7;
+    padding: 2px 5px;
+    border-radius: 5px;
+}
+
+.allow-yes {
+    color: white;
+    background-color: green;
+    padding: 2px 5px;
+    border-radius: 5px;
+}
