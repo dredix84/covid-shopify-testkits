@@ -90,4 +90,14 @@ class Util
         }
         return $postcode;
     }
+
+    /**
+     * Returns a has key of the object passed in.
+     * @param $object
+     * @return string
+     */
+    public static function getObjectHash($object)
+    {
+        return md5(json_encode($object));
+    }
 }
