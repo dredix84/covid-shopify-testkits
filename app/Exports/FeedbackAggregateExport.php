@@ -41,22 +41,23 @@ class FeedbackAggregateExport implements FromArray, Responsable
     {
         $feedbacks = Feedback::whereBetween(
             'created_at', [
-                Carbon::createFromFormat('Y-m-d', $this->startDate),
-                Carbon::createFromFormat('Y-m-d', $this->endDate)
-            ]
-        )->get();
+            Carbon::createFromFormat('Y-m-d', $this->startDate),
+            Carbon::createFromFormat('Y-m-d', $this->endDate)
+        ])
+            ->with(['feedbackCustomer'])
+            ->get();
 
         $reportData = [
             $this->headings()
         ];
 
-        foreach ($feedbacks as $feedback) {
+        foreach ($feedbacks as $fkey => $feedback) {
+
             $customerId = $feedback->customer_id;
             if (!isset($reportData[$customerId])) {
-                $customer   = Customer::select([
-                    'last_order', 'last_order_id', 'email', 'shopify_id'
-                ])->find($customerId);
+                $customer   = &$feedback->feedbackCustomer;
                 $postalCode = $customer->last_pickup_postal_code;
+
                 if (isset($this->locationNames[$postalCode])) {
                     $pickupLocation = $this->locationNames[$postalCode];
                 } else {

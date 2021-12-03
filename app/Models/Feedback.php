@@ -45,4 +45,15 @@ class Feedback extends Model
     {
         return $this->created_at ? $this->created_at->format('lll') : null;
     }
+
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class, 'customer_id');
+    }
+
+    public function feedbackCustomer()
+    {
+        return $this->customer()
+            ->select(['last_order', 'last_order_id', 'email', 'shopify_id']);
+    }
 }
